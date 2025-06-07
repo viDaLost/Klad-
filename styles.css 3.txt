@@ -1,0 +1,179 @@
+/* Основные стили */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Georgia', serif;
+    background-color: #fffde6; /* Кремовый фон */
+    color: #333333;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Заголовок */
+header {
+    text-align: center;
+    padding: 25px 0;
+    background-color: #f5f0e6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin: 0;
+    color: #4a3f35;
+    font-family: 'Playfair Display', serif;
+}
+
+/* Кнопки */
+button {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Основные кнопки */
+#booksBtn, #psalmsBtn {
+    background-color: #8b7554;
+    color: white;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 20px auto;
+    display: block;
+}
+
+#booksBtn:hover, #psalmsBtn:hover {
+    background-color: #7a664c;
+}
+
+/* Поля ввода */
+input[type="text"] {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    margin-bottom: 10px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #8b7554;
+    outline: none;
+}
+
+/* Списки */
+.books-list, .psalms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Элементы списка книг */
+.book-item, .search-result, .psalm-item {
+    padding: 15px;
+    border: 1px solid #e0dcd5;
+    border-left: 5px solid #8b7554;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fffefc;
+    position: relative;
+}
+
+.book-item:hover, .search-result:hover, .psalm-item:hover {
+    transform: translateX(5px);
+    border-left-color: #7a664c;
+    background-color: #fdfcf9;
+}
+
+/* Заголовки результатов поиска */
+.search-result h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: #5a4c42;
+}
+
+/* Контролы глав и шрифта */
+.chapter-controls, .font-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.chapter-controls button, .font-controls button {
+    padding: 8px 12px;
+    background-color: #f0ece4;
+    color: #5a4c42;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.chapter-controls button:hover, .font-controls button:hover {
+    background-color: #e6ded4;
+}
+
+.font-controls span {
+    margin: 0 10px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Контент книг и псалмов */
+.book-content, .psalm-content {
+    padding: 20px;
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+/* Подсветка поисковых слов */
+.highlight {
+    background-color: #fff3cd;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* Футер */
+footer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Мобильные стили */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 24px;
+    }
+    
+    button {
+        font-size: 16px;
+    }
+    
+    input[type="text"] {
+        font-size: 15px;
+    }
+    
+    .book-content, .psalm-content {
+        font-size: 15px;
+    }
+}
