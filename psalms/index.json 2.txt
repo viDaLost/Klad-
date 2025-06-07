@@ -1,0 +1,12 @@
+[
+    {
+        "id": "psalm1",
+        "title": "Псалом 1",
+        "file": "psalm1.json"
+    },
+    {
+        "id": "psalm2",
+        "title": "Псалом 2",
+        "file": "psalm2.json"
+    }
+]
