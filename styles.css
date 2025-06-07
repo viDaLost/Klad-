@@ -168,15 +168,12 @@ footer {
     h1 {
         font-size: 24px;
     }
-    
     button {
         font-size: 16px;
     }
-    
     input[type="text"] {
         font-size: 15px;
     }
-    
     .book-content, .psalm-content {
         font-size: 15px;
     }
