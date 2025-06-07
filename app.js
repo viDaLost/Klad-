@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
-    
-    const mainMenu = document.getElementById('app');
-    
+
     // Инициализация главного меню
     function initMainMenu() {
         const app = document.getElementById('app');
@@ -18,14 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </main>
         `;
-        
         document.getElementById('booksBtn').addEventListener('click', loadBooks);
         document.getElementById('psalmsBtn').addEventListener('click', loadPsalms);
     }
-    
+
     // Загрузка книг
     function loadBooks() {
-        fetch('books/index.json')
+        fetch('/books/index.json') // Абсолютный путь
             .then(response => response.json())
             .then(books => {
                 const app = document.getElementById('app');
@@ -44,11 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button id="backBtn">← Назад</button>
                     </footer>
                 `;
-                
+
                 const bookSearchInput = document.getElementById('bookSearch');
                 const contentSearchInput = document.getElementById('contentSearch');
                 const booksList = document.getElementById('booksList');
-                
+
                 // Рендеринг книг
                 function renderBooks(filteredBooks) {
                     booksList.innerHTML = '';
@@ -56,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         booksList.innerHTML = '<p style="text-align:center; color:#888;">Книги не найдены</p>';
                         return;
                     }
-                    
                     filteredBooks.forEach(book => {
                         const bookItem = document.createElement('div');
                         bookItem.className = 'book-item';
@@ -65,21 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         booksList.appendChild(bookItem);
                     });
                 }
-                
+
                 // Поиск по названию
                 bookSearchInput.addEventListener('input', (e) => {
                     const query = e.target.value.toLowerCase();
                     const filtered = books.filter(book => book.title.toLowerCase().includes(query));
                     renderBooks(filtered);
                 });
-                
+
                 // Поиск по содержимому
                 contentSearchInput.addEventListener('input', (e) => {
                     const query = e.target.value.toLowerCase();
                     if (query.length < 2) return;
-                    
+
                     Promise.all(books.map(book => {
-                        return fetch(`books/${book.file}`)
+                        return fetch(`/books/${book.file}`) // Абсолютный путь
                             .then(response => response.json())
                             .then(data => {
                                 const results = findTextInBook(data, query, book);
@@ -89,34 +85,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Объединяем все найденные результаты
                         const allResults = results.flat();
                         booksList.innerHTML = '';
-                        
                         if (allResults.length === 0) {
                             booksList.innerHTML = '<p style="text-align:center; color:#888;">Ничего не найдено</p>';
                             return;
                         }
-                        
                         allResults.forEach(result => {
                             const resultItem = document.createElement('div');
                             resultItem.className = 'search-result';
-                            
                             resultItem.innerHTML = `
                                 <h3>${result.book.title}</h3>
                                 <p>...${result.context}...</p>
                                 <small>Глава ${result.chapter.number}</small>
                             `;
-                            
                             resultItem.addEventListener('click', () => {
                                 loadBookContent(result.book, result.chapter.number, result.verse);
                             });
-                            
                             booksList.appendChild(resultItem);
                         });
                     });
                 });
-                
+
                 // Назад
                 document.getElementById('backBtn').addEventListener('click', initMainMenu);
-                
+
                 // Инициальный рендер
                 renderBooks(books);
             })
@@ -125,12 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Не удалось загрузить список книг. Пожалуйста, попробуйте позже.');
             });
     }
-    
+
     // Поиск текста в книге
     function findTextInBook(bookData, query, book) {
         const results = [];
         const words = query.split(/\s+/);
-        
         bookData.chapters.forEach(chapter => {
             // Поиск в заголовке главы
             if (chapter.title && chapter.title.toLowerCase().includes(query)) {
@@ -141,11 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     verse: null
                 });
             }
-            
             // Поиск в тексте главы
             if (chapter.text) {
                 const sentences = chapter.text.split(/[.!?]+/);
-                
                 sentences.forEach(sentence => {
                     if (sentence.toLowerCase().includes(query)) {
                         results.push({
@@ -156,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }
                 });
-                
                 // Поиск по стихам
                 if (chapter.verses) {
                     chapter.verses.forEach(verse => {
@@ -172,19 +159,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        
         return results;
     }
-    
+
     // Подсветка найденного текста
     function highlightText(text, query) {
         const regex = new RegExp(`(${query})`, 'gi');
         return text.replace(regex, '<span class="highlight">$1</span>');
     }
-    
+
     // Загрузка содержания книги
     function loadBookContent(book, chapterNumber = 1, verseNumber = null) {
-        fetch(`books/${book.file}`)
+        fetch(`/books/${book.file}`) // Абсолютный путь
             .then(response => response.json())
             .then(data => {
                 const app = document.getElementById('app');
@@ -210,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button id="backToMenu">← Главное меню</button>
                     </footer>
                 `;
-                
+
                 const chapterSelect = document.getElementById('chapterSelect');
                 const bookContent = document.getElementById('bookContent');
                 const prevChapter = document.getElementById('prevChapter');
@@ -220,19 +206,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const increaseFont = document.getElementById('increaseFont');
                 const backToBooks = document.getElementById('backToBooks');
                 const backToMenu = document.getElementById('backToMenu');
-                
+
                 let currentChapterIndex = Math.max(0, data.chapters.findIndex(c => c.number == chapterNumber));
                 let fontSize = 16;
-                
+
                 // Обновление отображения главы
                 function updateChapter() {
                     const chapter = data.chapters[currentChapterIndex];
                     let content = `<h2>Глава ${chapter.number}</h2>`;
-                    
                     if (chapter.title) {
                         content += `<h3>${chapter.title}</h3>`;
                     }
-                    
                     if (chapter.verses) {
                         content += '<div class="verses">';
                         chapter.verses.forEach(verse => {
@@ -246,19 +230,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         content += `<p>${chapter.text}</p>`;
                     }
-                    
                     bookContent.innerHTML = content;
                     bookContent.style.fontSize = `${fontSize}px`;
-                    
                     // Добавляем обработчики клика на стихи
                     document.querySelectorAll('.verse').forEach(verse => {
                         verse.addEventListener('click', (e) => {
                             const verseNumber = e.currentTarget.dataset.verse;
-                            // Здесь можно реализовать сохранение закладки или другие действия
                         });
                     });
                 }
-                
+
                 // Заполнение селекта глав
                 function populateChapterSelect() {
                     chapterSelect.innerHTML = '';
@@ -270,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     chapterSelect.selectedIndex = currentChapterIndex;
                 }
-                
+
                 // Обработчики событий
                 prevChapter.addEventListener('click', () => {
                     if (currentChapterIndex > 0) {
@@ -279,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         populateChapterSelect();
                     }
                 });
-                
                 nextChapter.addEventListener('click', () => {
                     if (currentChapterIndex < data.chapters.length - 1) {
                         currentChapterIndex++;
@@ -287,12 +267,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         populateChapterSelect();
                     }
                 });
-                
                 chapterSelect.addEventListener('change', (e) => {
                     currentChapterIndex = parseInt(e.target.value);
                     updateChapter();
                 });
-                
+
                 // Управление размером шрифта
                 decreaseFont.addEventListener('click', () => {
                     if (fontSize > 12) {
@@ -301,7 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         updateChapter();
                     }
                 });
-                
                 increaseFont.addEventListener('click', () => {
                     if (fontSize < 24) {
                         fontSize += 2;
@@ -309,13 +287,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         updateChapter();
                     }
                 });
-                
+
                 // Назад к книгам
                 backToBooks.addEventListener('click', loadBooks);
-                
+
                 // Назад к главному меню
                 backToMenu.addEventListener('click', initMainMenu);
-                
+
                 // Инициализация
                 updateChapter();
                 populateChapterSelect();
@@ -325,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Не удалось загрузить содержание книги. Пожалуйста, попробуйте позже.');
             });
     }
-    
+
     // Загрузка псалмов
     function loadPsalms() {
         const app = document.getElementById('app');
@@ -343,10 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button id="backBtn">← Назад</button>
             </footer>
         `;
-        
+
         const psalmSearchInput = document.getElementById('psalmSearch');
         const psalmsList = document.getElementById('psalmsList');
-        
+
         // Поиск псалмов
         psalmSearchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
@@ -354,12 +332,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 psalmsList.innerHTML = '<p style="text-align:center; color:#888;">Введите поисковой запрос</p>';
                 return;
             }
-            
-            fetch('psalms/index.json')
+
+            fetch('/psalms/index.json') // Абсолютный путь
                 .then(response => response.json())
                 .then(psalms => {
                     Promise.all(psalms.map(psalm => {
-                        return fetch(`psalms/${psalm.file}`)
+                        return fetch(`/psalms/${psalm.file}`) // Абсолютный путь
                             .then(response => response.json())
                             .then(data => {
                                 psalm.content = data.text;
@@ -370,14 +348,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             return psalm.title.toLowerCase().includes(query) || 
                                    psalm.content.toLowerCase().includes(query);
                         });
-                        
                         psalmsList.innerHTML = '';
-                        
                         if (results.length === 0) {
                             psalmsList.innerHTML = '<p style="text-align:center; color:#888;">Ничего не найдено</p>';
                             return;
                         }
-                        
                         results.forEach(psalm => {
                             const psalmItem = document.createElement('div');
                             psalmItem.className = 'psalm-item';
@@ -391,14 +366,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
         });
-        
+
         // Назад
         document.getElementById('backBtn').addEventListener('click', initMainMenu);
     }
-    
+
     // Загрузка содержания псалма
     function loadPsalmContent(psalm) {
-        fetch(`psalms/${psalm.file}`)
+        fetch(`/psalms/${psalm.file}`) // Абсолютный путь
             .then(response => response.json())
             .then(data => {
                 const app = document.getElementById('app');
@@ -414,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button id="backToMenu">← Главное меню</button>
                     </footer>
                 `;
-                
                 document.getElementById('backToPsalms').addEventListener('click', loadPsalms);
                 document.getElementById('backToMenu').addEventListener('click', initMainMenu);
             })
@@ -423,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Не удалось загрузить текст псалма. Пожалуйста, попробуйте позже.');
             });
     }
-    
+
     // Инициализация приложения
     initMainMenu();
 });
