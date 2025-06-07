@@ -1,0 +1,12 @@
+[
+    {
+        "id": "genesis",
+        "title": "Бытие",
+        "file": "genesis.json"
+    },
+    {
+        "id": "exodus",
+        "title": "Исход",
+        "file": "exodus.json"
+    }
+]
