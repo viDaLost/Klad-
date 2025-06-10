@@ -3,58 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>КЛАДОВАЯ</title>
+  <title>Главная</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://telegram.org/js/telegram-web-app.js"></script> 
 </head>
 <body>
-  <div id="app">
-    <!-- Главное меню -->
-    <div class="screen" id="main-menu">
-      <h1>КЛАДОВАЯ</h1>
-      <button onclick="navigateTo('books')">Книги</button>
-      <button onclick="navigateTo('psalms')">Псалмы</button>
-    </div>
-
-    <!-- Раздел Книги -->
-    <div class="screen hidden" id="books-screen">
-      <div class="header">
-        <button onclick="navigateBack()">← Назад</button>
-        <h2>Книги</h2>
-      </div>
-      <input type="text" placeholder="Поиск по названию..." oninput="filterBooksByTitle(this.value)" />
-      <input type="text" placeholder="Поиск по содержимому..." oninput="filterBooksByContent(this.value)" />
-      <div id="books-list"></div>
-    </div>
-
-    <!-- Чтение книги -->
-    <div class="screen hidden" id="book-reader">
-      <div class="header">
-        <button onclick="navigateBack()">← К книгам</button>
-        <h2 id="book-title">Заголовок книги</h2>
-      </div>
-      <div class="reader-controls">
-        <button onclick="changeChapter(-1)">←</button>
-        <select id="chapter-select" onchange="jumpToChapter()"></select>
-        <button onclick="changeChapter(1)">→</button>
-        <div class="font-controls">
-          <button onclick="adjustFontSize(-1)">-</button>
-          <span id="font-size-label">16</span>
-          <button onclick="adjustFontSize(1)">+</button>
-        </div>
-      </div>
-      <div id="book-content" class="book-text"></div>
-    </div>
-
-    <!-- Раздел Псалмы -->
-    <div class="screen hidden" id="psalms-screen">
-      <div class="header">
-        <button onclick="navigateBack()">← Назад</button>
-        <h2>Псалмы</h2>
-      </div>
-      <input type="text" placeholder="Поиск: номер, название или текст..." oninput="searchPsalms(this.value)" />
-      <div id="psalms-list"></div>
-    </div>
+  <div class="main-menu">
+    <h1>Добро пожаловать!</h1>
+    <button onclick="goTo('books')">Книги</button>
+    <button onclick="goTo('psalms')">Псалмы</button>
   </div>
 
   <script src="script.js"></script>
