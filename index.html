@@ -1,24 +1,54 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>КЛАДОВАЯ</title>
-    <link rel="stylesheet" href="/style.css"> <!-- Абсолютный путь к стилям -->
+    <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script> 
 </head>
 <body>
-    <div id="app">
-        <header>
-            <h1>КЛАДОВАЯ</h1>
-        </header>
-        <main>
-            <div class="button-container">
-                <button id="booksBtn">Книги</button>
-                <button id="psalmsBtn">Псалмы</button>
-            </div>
-        </main>
+    <div class="container" id="main">
+        <h1>КЛАДОВАЯ</h1>
+        <div class="button-container">
+            <button onclick="showSection('books')">Книги</button>
+            <button onclick="showSection('psalms')">Псалмы</button>
+        </div>
     </div>
-    <script src="/app.js"></script> <!-- Абсолютный путь к скрипту -->
+
+    <!-- Books Section -->
+    <div class="container hidden" id="books-section">
+        <div class="search-bar">
+            <input type="text" id="book-title-search" placeholder="Поиск по названию..." oninput="filterBooks()">
+            <input type="text" id="book-content-search" placeholder="Поиск по содержимому..." oninput="filterBooks()">
+        </div>
+        <div class="book-list" id="book-list"></div>
+    </div>
+
+    <!-- Book Reader -->
+    <div class="container hidden" id="book-reader">
+        <div class="reader-header">
+            <button onclick="backTo('books')">К книгам</button>
+            <button onclick="backTo('main')">Главное меню</button>
+        </div>
+        <div class="reader-controls">
+            <button onclick="changeFontSize(-1)">-</button>
+            <select id="chapter-select" onchange="changeChapter()"></select>
+            <button onclick="changeFontSize(1)">+</button>
+        </div>
+        <div class="book-content" id="book-content"></div>
+    </div>
+
+    <!-- Psalms Section -->
+    <div class="container hidden" id="psalms-section">
+        <div class="search-bar">
+            <input type="text" id="psalm-search" placeholder="Поиск по псалмам..." oninput="searchPsalms()">
+        </div>
+        <div class="psalm-list" id="psalm-list"></div>
+        <button class="back-button" onclick="backTo('main')">Главное меню</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
