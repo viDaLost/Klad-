@@ -1,129 +1,103 @@
-/* style.css */
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #fff5e1;
-    font-family: Georgia, Roboto, Inter, sans-serif;
-    color: #333;
+* {
+  box-sizing: border-box;
 }
 
-.container {
-    padding: 20px;
-    max-width: 600px;
-    margin: 0 auto;
+body {
+  margin: 0;
+  font-family: Georgia, Roboto, Inter, sans-serif;
+  background-color: #fff5e1;
+  color: #333;
+}
+
+#app {
+  padding: 16px;
+}
+
+.screen {
+  display: block;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
-h1 {
-    text-align: center;
-    color: #4a4a4a;
-    margin-bottom: 30px;
-}
-
-.button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
 
 button {
-    background-color: #a8d0e6;
-    border: 1px solid #8abdbf;
-    border-radius: 12px;
-    padding: 15px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  background-color: #a8d0e6;
+  border: 1px solid #8abdbf;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 button:hover {
-    background-color: #9bc1cf;
-}
-
-.search-bar {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
+  background-color: #9bc1cf;
 }
 
 input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
 }
 
-.book-list, .psalm-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+#books-list, #psalms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .book-item, .psalm-item {
-    background-color: #f0f8ff;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #cfe3f0;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  background-color: #f0f8ff;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cfe3f0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .book-item:hover, .psalm-item:hover {
-    background-color: #e0f0ff;
-}
-
-.reader-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
+  background-color: #e0f0ff;
 }
 
 .reader-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-#chapter-select {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+.reader-controls button {
+  min-width: 40px;
+  text-align: center;
 }
 
-.book-content {
-    line-height: 1.6;
-    font-size: 18px;
-    white-space: pre-wrap;
+.font-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.back-button {
-    margin-top: 20px;
-    width: 100%;
+#font-size-label {
+  min-width: 24px;
+  text-align: center;
+  font-weight: bold;
 }
 
-/* Mobile styles */
-@media (max-width: 600px) {
-    h1 {
-        font-size: 24px;
-    }
-    
-    button {
-        font-size: 16px;
-    }
-    
-    input[type="text"] {
-        font-size: 14px;
-    }
-    
-    .book-content {
-        font-size: 16px;
-    }
+.book-text {
+  line-height: 1.6;
+  font-size: 16px;
 }
