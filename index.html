@@ -1,54 +1,62 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>КЛАДОВАЯ</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>КЛАДОВАЯ</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script> 
 </head>
 <body>
-    <div class="container" id="main">
-        <h1>КЛАДОВАЯ</h1>
-        <div class="button-container">
-            <button onclick="showSection('books')">Книги</button>
-            <button onclick="showSection('psalms')">Псалмы</button>
-        </div>
+  <div id="app">
+    <!-- Главное меню -->
+    <div class="screen" id="main-menu">
+      <h1>КЛАДОВАЯ</h1>
+      <button onclick="navigateTo('books')">Книги</button>
+      <button onclick="navigateTo('psalms')">Псалмы</button>
     </div>
 
-    <!-- Books Section -->
-    <div class="container hidden" id="books-section">
-        <div class="search-bar">
-            <input type="text" id="book-title-search" placeholder="Поиск по названию..." oninput="filterBooks()">
-            <input type="text" id="book-content-search" placeholder="Поиск по содержимому..." oninput="filterBooks()">
-        </div>
-        <div class="book-list" id="book-list"></div>
+    <!-- Раздел Книги -->
+    <div class="screen hidden" id="books-screen">
+      <div class="header">
+        <button onclick="navigateBack()">← Назад</button>
+        <h2>Книги</h2>
+      </div>
+      <input type="text" placeholder="Поиск по названию..." oninput="filterBooksByTitle(this.value)" />
+      <input type="text" placeholder="Поиск по содержимому..." oninput="filterBooksByContent(this.value)" />
+      <div id="books-list"></div>
     </div>
 
-    <!-- Book Reader -->
-    <div class="container hidden" id="book-reader">
-        <div class="reader-header">
-            <button onclick="backTo('books')">К книгам</button>
-            <button onclick="backTo('main')">Главное меню</button>
+    <!-- Чтение книги -->
+    <div class="screen hidden" id="book-reader">
+      <div class="header">
+        <button onclick="navigateBack()">← К книгам</button>
+        <h2 id="book-title">Заголовок книги</h2>
+      </div>
+      <div class="reader-controls">
+        <button onclick="changeChapter(-1)">←</button>
+        <select id="chapter-select" onchange="jumpToChapter()"></select>
+        <button onclick="changeChapter(1)">→</button>
+        <div class="font-controls">
+          <button onclick="adjustFontSize(-1)">-</button>
+          <span id="font-size-label">16</span>
+          <button onclick="adjustFontSize(1)">+</button>
         </div>
-        <div class="reader-controls">
-            <button onclick="changeFontSize(-1)">-</button>
-            <select id="chapter-select" onchange="changeChapter()"></select>
-            <button onclick="changeFontSize(1)">+</button>
-        </div>
-        <div class="book-content" id="book-content"></div>
+      </div>
+      <div id="book-content" class="book-text"></div>
     </div>
 
-    <!-- Psalms Section -->
-    <div class="container hidden" id="psalms-section">
-        <div class="search-bar">
-            <input type="text" id="psalm-search" placeholder="Поиск по псалмам..." oninput="searchPsalms()">
-        </div>
-        <div class="psalm-list" id="psalm-list"></div>
-        <button class="back-button" onclick="backTo('main')">Главное меню</button>
+    <!-- Раздел Псалмы -->
+    <div class="screen hidden" id="psalms-screen">
+      <div class="header">
+        <button onclick="navigateBack()">← Назад</button>
+        <h2>Псалмы</h2>
+      </div>
+      <input type="text" placeholder="Поиск: номер, название или текст..." oninput="searchPsalms(this.value)" />
+      <div id="psalms-list"></div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
