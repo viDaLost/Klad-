@@ -1,157 +1,127 @@
-let books = [];
-let filteredBooks = [];
-let currentBook = null;
-let currentChapter = 0;
-let currentFontSize = 16;
+let booksData = [];
+let psalmsData = [];
 
-let psalms = [];
-let filteredPsalms = [];
-
-Telegram.WebApp.ready();
-
-function navigateTo(screen) {
-  document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
-  document.getElementById(`${screen}-screen`).classList.remove('hidden');
+function goTo(page) {
+  window.location.href = page + ".html";
 }
 
-function navigateBack() {
-  if (document.getElementById('book-reader').classList.contains('hidden')) {
-    // Возвращаемся к главному меню
-    document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
-    document.getElementById('main-menu').classList.remove('hidden');
-  } else {
-    // Возвращаемся к списку книг
-    document.getElementById('book-reader').classList.add('hidden');
-    document.getElementById('books-screen').classList.remove('hidden');
-  }
+function goHome() {
+  window.location.href = "index.html";
 }
 
+// Загрузка данных
 async function loadBooks() {
-  try {
-    const res = await fetch('books/index.json');
-    books = await res.json();
-    books.sort((a, b) => a.title.localeCompare(b.title));
-    renderBooksList(books);
-  } catch (e) {
-    console.error('Ошибка загрузки книг:', e);
-  }
-}
-
-function renderBooksList(list) {
-  const container = document.getElementById('books-list');
-  container.innerHTML = '';
-  list.forEach((book, index) => {
-    const div = document.createElement('div');
-    div.className = 'book-item';
-    div.textContent = book.title;
-    div.onclick = () => openBook(book);
-    container.appendChild(div);
-  });
-}
-
-async function openBook(book) {
-  try {
-    const res = await fetch(`books/${book.file}`);
-    currentBook = await res.json();
-    currentChapter = 0;
-    document.getElementById('books-screen').classList.add('hidden');
-    document.getElementById('book-reader').classList.remove('hidden');
-
-    document.getElementById('book-title').textContent = currentBook.title;
-    renderChapters(currentBook.chapters);
-    displayChapter(currentChapter);
-  } catch (e) {
-    console.error('Ошибка открытия книги:', e);
-  }
-}
-
-function renderChapters(chapters) {
-  const select = document.getElementById('chapter-select');
-  select.innerHTML = chapters.map((_, i) => `<option value="${i}">Глава ${i + 1}</option>`).join('');
-}
-
-function jumpToChapter() {
-  currentChapter = parseInt(document.getElementById('chapter-select').value);
-  displayChapter(currentChapter);
-}
-
-function changeChapter(delta) {
-  currentChapter += delta;
-  if (currentChapter < 0) currentChapter = 0;
-  if (currentChapter >= currentBook.chapters.length) currentChapter = currentBook.chapters.length - 1;
-  document.getElementById('chapter-select').value = currentChapter;
-  displayChapter(currentChapter);
-}
-
-function displayChapter(index) {
-  const content = document.getElementById('book-content');
-  content.style.fontSize = `${currentFontSize}px`;
-  content.textContent = currentBook.chapters[index];
-}
-
-function adjustFontSize(delta) {
-  currentFontSize += delta;
-  if (currentFontSize < 12) currentFontSize = 12;
-  if (currentFontSize > 24) currentFontSize = 24;
-  document.getElementById('font-size-label').textContent = currentFontSize;
-  displayChapter(currentChapter);
-}
-
-function filterBooksByTitle(query) {
-  query = query.toLowerCase();
-  const results = books.filter(b => b.title.toLowerCase().includes(query));
-  renderBooksList(results);
-}
-
-function filterBooksByContent(query) {
-  query = query.toLowerCase();
-  if (!query) return renderBooksList(books);
-
-  const results = books.filter(b =>
-    b.chapters.some(ch => ch.toLowerCase().includes(query))
-  );
-  renderBooksList(results);
+  const res = await fetch("data/books.json");
+  booksData = await res.json();
 }
 
 async function loadPsalms() {
-  try {
-    const res = await fetch('psalms/index.json');
-    psalms = await res.json();
-    renderPsalms(psalms);
-  } catch (e) {
-    console.error('Ошибка загрузки псалмов:', e);
-  }
+  const res = await fetch("data/psalms.json");
+  psalmsData = await res.json();
 }
 
-function renderPsalms(list) {
-  const container = document.getElementById('psalms-list');
-  container.innerHTML = '';
-  list.forEach(psalm => {
-    const div = document.createElement('div');
-    div.className = 'psalm-item';
-    div.innerHTML = `<strong>${psalm.number}. ${psalm.title}</strong><br>${psalm.text.substring(0, 100)}...`;
-    div.onclick = () => alert(`${psalm.number}. ${psalm.title}\n\n${psalm.text}`);
-    container.appendChild(div);
-  });
-}
+function searchBooks() {
+  const input = document.getElementById("bookSearchInput").value.toLowerCase();
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
 
-function searchPsalms(query) {
-  query = query.toLowerCase();
-  if (!query) {
-    renderPsalms(psalms);
+  const results = booksData.filter(book => book.title.toLowerCase().includes(input));
+
+  if (results.length === 0) {
+    resultsDiv.innerHTML = "<p>Ничего не найдено</p>";
     return;
   }
 
-  const results = psalms.filter(p =>
-    p.title.toLowerCase().includes(query) ||
-    p.number.toString().includes(query) ||
-    p.text.toLowerCase().includes(query)
-  );
-  renderPsalms(results);
+  results.forEach(book => {
+    const el = document.createElement("div");
+    el.className = "result-item";
+    el.innerText = book.title;
+    el.onclick = () => showBook(book);
+    resultsDiv.appendChild(el);
+  });
 }
 
-// Загружаем данные при старте
-window.addEventListener('load', () => {
-  loadBooks();
-  loadPsalms();
-});
+function searchByWord() {
+  const word = document.getElementById("wordSearchInput").value.toLowerCase();
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
+
+  let matches = [];
+
+  booksData.forEach(book => {
+    book.chapters.forEach(chapter => {
+      if (chapter.text.toLowerCase().includes(word)) {
+        matches.push({
+          bookTitle: book.title,
+          chapterNumber: chapter.number,
+          snippet: chapter.text.slice(0, 100) + "..."
+        });
+      }
+    });
+  });
+
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = "<p>Ничего не найдено</p>";
+    return;
+  }
+
+  matches.forEach(match => {
+    const el = document.createElement("div");
+    el.className = "result-item";
+    el.innerHTML = `<strong>${match.bookTitle}</strong><br>${match.snippet}`;
+    el.onclick = () => showBookAndChapter(match.bookTitle, match.chapterNumber);
+    resultsDiv.appendChild(el);
+  });
+}
+
+function showBook(book) {
+  localStorage.setItem("lastRead", JSON.stringify({ title: book.title, chapter: 1 }));
+  alert(`Открыть книгу "${book.title}", глава 1`);
+}
+
+function showBookAndChapter(title, chapter) {
+  const book = booksData.find(b => b.title === title);
+  if (!book) return;
+
+  const chap = book.chapters.find(c => c.number === chapter);
+  if (!chap) return;
+
+  localStorage.setItem("lastRead", JSON.stringify({ title, chapter }));
+  alert(`Открыть "${title}", глава ${chapter}`);
+}
+
+// Псалмы
+function searchPsalms() {
+  const input = document.getElementById("psalmSearchInput").value.toLowerCase();
+  const resultsDiv = document.getElementById("psalmResults");
+  resultsDiv.innerHTML = "";
+
+  const results = psalmsData.filter(p =>
+    p.number.toString().includes(input) ||
+    p.title.toLowerCase().includes(input) ||
+    p.text.toLowerCase().includes(input)
+  );
+
+  results.forEach(p => {
+    const el = document.createElement("div");
+    el.className = "result-item";
+    el.innerHTML = `<strong>Псалом ${p.number}</strong>: ${p.title}`;
+    el.onclick = () => showModal(p.text);
+    resultsDiv.appendChild(el);
+  });
+}
+
+function showModal(text) {
+  document.getElementById("modalText").innerText = text;
+  document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+function increaseFontSize() {
+  const modalText = document.getElementById("modalText");
+  let currentSize = parseFloat(window.getComputedStyle(modalText).fontSize);
+  modalText.style.fontSize = (currentSize + 2) + "px";
+}
