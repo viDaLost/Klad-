@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Книги</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Поиск книг</h2>
+    <div class="search-group">
+      <label>Поиск по названию:</label>
+      <input type="text" id="bookSearchInput" placeholder="Введите название книги" />
+      <button onclick="searchBooks()">🔍 Поиск</button>
+    </div>
+    <div class="search-group">
+      <label>Поиск по слову:</label>
+      <input type="text" id="wordSearchInput" placeholder="Введите слово" />
+      <button onclick="searchByWord()">🔍 Поиск</button>
+    </div>
+    <div id="results"></div>
+    <button onclick="goHome()" class="back-btn">⬅ Главное меню</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    window.onload = loadBooks;
+  </script>
+</body>
+</html>
