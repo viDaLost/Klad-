@@ -1,171 +1,157 @@
-// script.js
+let books = [];
+let filteredBooks = [];
 let currentBook = null;
 let currentChapter = 0;
 let currentFontSize = 16;
 
+let psalms = [];
+let filteredPsalms = [];
+
 Telegram.WebApp.ready();
 
-function showSection(section) {
-    document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
-    document.getElementById(`${section}-section`).classList.remove('hidden');
-    
-    if (section === 'books' && !document.getElementById('book-list').innerHTML) {
-        loadBooks();
-    } else if (section === 'psalms' && !document.getElementById('psalm-list').innerHTML) {
-        loadPsalms();
-    }
+function navigateTo(screen) {
+  document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
+  document.getElementById(`${screen}-screen`).classList.remove('hidden');
 }
 
-function backTo(section) {
-    if (section === 'books') {
-        document.getElementById('book-reader').classList.add('hidden');
-        document.getElementById('books-section').classList.remove('hidden');
-    } else {
-        document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
-        document.getElementById('main').classList.remove('hidden');
-    }
+function navigateBack() {
+  if (document.getElementById('book-reader').classList.contains('hidden')) {
+    // Возвращаемся к главному меню
+    document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
+    document.getElementById('main-menu').classList.remove('hidden');
+  } else {
+    // Возвращаемся к списку книг
+    document.getElementById('book-reader').classList.add('hidden');
+    document.getElementById('books-screen').classList.remove('hidden');
+  }
 }
 
 async function loadBooks() {
-    try {
-        const response = await fetch('books/index.json');
-        const books = await response.json();
-        
-        books.sort((a, b) => a.title.localeCompare(b.title));
-        window.booksData = books;
-        
-        const list = document.getElementById('book-list');
-        list.innerHTML = '';
-        
-        books.forEach(book => {
-            const div = document.createElement('div');
-            div.className = 'book-item';
-            div.textContent = book.title;
-            div.onclick = () => loadBook(book);
-            list.appendChild(div);
-        });
-    } catch (error) {
-        console.error('Error loading books:', error);
-    }
+  try {
+    const res = await fetch('books/index.json');
+    books = await res.json();
+    books.sort((a, b) => a.title.localeCompare(b.title));
+    renderBooksList(books);
+  } catch (e) {
+    console.error('Ошибка загрузки книг:', e);
+  }
 }
 
-async function loadBook(book) {
-    try {
-        const response = await fetch(`books/${book.file}`);
-        const bookData = await response.json();
-        
-        currentBook = bookData;
-        currentChapter = 0;
-        
-        document.getElementById('books-section').classList.add('hidden');
-        document.getElementById('book-reader').classList.remove('hidden');
-        
-        // Update chapter select
-        const select = document.getElementById('chapter-select');
-        select.innerHTML = '';
-        
-        bookData.chapters.forEach((chapter, index) => {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = `Глава ${index + 1}`;
-            select.appendChild(option);
-        });
-        
-        select.value = currentChapter;
-        displayChapter();
-    } catch (error) {
-        console.error('Error loading book:', error);
-    }
+function renderBooksList(list) {
+  const container = document.getElementById('books-list');
+  container.innerHTML = '';
+  list.forEach((book, index) => {
+    const div = document.createElement('div');
+    div.className = 'book-item';
+    div.textContent = book.title;
+    div.onclick = () => openBook(book);
+    container.appendChild(div);
+  });
 }
 
-function changeChapter() {
-    currentChapter = parseInt(document.getElementById('chapter-select').value);
-    displayChapter();
+async function openBook(book) {
+  try {
+    const res = await fetch(`books/${book.file}`);
+    currentBook = await res.json();
+    currentChapter = 0;
+    document.getElementById('books-screen').classList.add('hidden');
+    document.getElementById('book-reader').classList.remove('hidden');
+
+    document.getElementById('book-title').textContent = currentBook.title;
+    renderChapters(currentBook.chapters);
+    displayChapter(currentChapter);
+  } catch (e) {
+    console.error('Ошибка открытия книги:', e);
+  }
 }
 
-function displayChapter() {
-    const content = document.getElementById('book-content');
-    content.style.fontSize = `${currentFontSize}px`;
-    content.textContent = currentBook.chapters[currentChapter];
+function renderChapters(chapters) {
+  const select = document.getElementById('chapter-select');
+  select.innerHTML = chapters.map((_, i) => `<option value="${i}">Глава ${i + 1}</option>`).join('');
 }
 
-function changeFontSize(delta) {
-    currentFontSize += delta;
-    if (currentFontSize < 12) currentFontSize = 12;
-    if (currentFontSize > 24) currentFontSize = 24;
-    displayChapter();
+function jumpToChapter() {
+  currentChapter = parseInt(document.getElementById('chapter-select').value);
+  displayChapter(currentChapter);
 }
 
-function filterBooks() {
-    const titleFilter = document.getElementById('book-title-search').value.toLowerCase();
-    const contentFilter = document.getElementById('book-content-search').value.toLowerCase();
-    
-    const filteredBooks = window.booksData.filter(book => {
-        if (titleFilter && !book.title.toLowerCase().includes(titleFilter)) return false;
-        if (contentFilter) {
-            // Check if any chapter contains the search term
-            if (!book.chapters.some(chapter => 
-                chapter.toLowerCase().includes(contentFilter))) return false;
-        }
-        return true;
-    });
-    
-    const list = document.getElementById('book-list');
-    list.innerHTML = '';
-    
-    filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
-    
-    filteredBooks.forEach(book => {
-        const div = document.createElement('div');
-        div.className = 'book-item';
-        div.textContent = book.title;
-        div.onclick = () => loadBook(book);
-        list.appendChild(div);
-    });
+function changeChapter(delta) {
+  currentChapter += delta;
+  if (currentChapter < 0) currentChapter = 0;
+  if (currentChapter >= currentBook.chapters.length) currentChapter = currentBook.chapters.length - 1;
+  document.getElementById('chapter-select').value = currentChapter;
+  displayChapter(currentChapter);
+}
+
+function displayChapter(index) {
+  const content = document.getElementById('book-content');
+  content.style.fontSize = `${currentFontSize}px`;
+  content.textContent = currentBook.chapters[index];
+}
+
+function adjustFontSize(delta) {
+  currentFontSize += delta;
+  if (currentFontSize < 12) currentFontSize = 12;
+  if (currentFontSize > 24) currentFontSize = 24;
+  document.getElementById('font-size-label').textContent = currentFontSize;
+  displayChapter(currentChapter);
+}
+
+function filterBooksByTitle(query) {
+  query = query.toLowerCase();
+  const results = books.filter(b => b.title.toLowerCase().includes(query));
+  renderBooksList(results);
+}
+
+function filterBooksByContent(query) {
+  query = query.toLowerCase();
+  if (!query) return renderBooksList(books);
+
+  const results = books.filter(b =>
+    b.chapters.some(ch => ch.toLowerCase().includes(query))
+  );
+  renderBooksList(results);
 }
 
 async function loadPsalms() {
-    try {
-        const response = await fetch('psalms/index.json');
-        const psalms = await response.json();
-        window.psalmsData = psalms;
-        
-        displayPsalms(psalms);
-    } catch (error) {
-        console.error('Error loading psalms:', error);
-    }
+  try {
+    const res = await fetch('psalms/index.json');
+    psalms = await res.json();
+    renderPsalms(psalms);
+  } catch (e) {
+    console.error('Ошибка загрузки псалмов:', e);
+  }
 }
 
-function displayPsalms(psalms) {
-    const list = document.getElementById('psalm-list');
-    list.innerHTML = '';
-    
-    psalms.forEach(psalm => {
-        const div = document.createElement('div');
-        div.className = 'psalm-item';
-        div.innerHTML = `<strong>${psalm.title}</strong><br>${psalm.text.substring(0, 100)}...`;
-        div.onclick = () => showPsalm(psalm);
-        list.appendChild(div);
-    });
+function renderPsalms(list) {
+  const container = document.getElementById('psalms-list');
+  container.innerHTML = '';
+  list.forEach(psalm => {
+    const div = document.createElement('div');
+    div.className = 'psalm-item';
+    div.innerHTML = `<strong>${psalm.number}. ${psalm.title}</strong><br>${psalm.text.substring(0, 100)}...`;
+    div.onclick = () => alert(`${psalm.number}. ${psalm.title}\n\n${psalm.text}`);
+    container.appendChild(div);
+  });
 }
 
-function searchPsalms() {
-    const filter = document.getElementById('psalm-search').value.toLowerCase();
-    
-    if (!filter) {
-        displayPsalms(window.psalmsData);
-        return;
-    }
-    
-    const results = window.psalmsData.filter(psalm => 
-        psalm.title.toLowerCase().includes(filter) ||
-        psalm.number.toString().includes(filter) ||
-        psalm.text.toLowerCase().includes(filter)
-    );
-    
-    displayPsalms(results);
+function searchPsalms(query) {
+  query = query.toLowerCase();
+  if (!query) {
+    renderPsalms(psalms);
+    return;
+  }
+
+  const results = psalms.filter(p =>
+    p.title.toLowerCase().includes(query) ||
+    p.number.toString().includes(query) ||
+    p.text.toLowerCase().includes(query)
+  );
+  renderPsalms(results);
 }
 
-function showPsalm(psalm) {
-    alert(`Псалом ${psalm.number}: ${psalm.title}\n\n${psalm.text}`);
-}
+// Загружаем данные при старте
+window.addEventListener('load', () => {
+  loadBooks();
+  loadPsalms();
+});
