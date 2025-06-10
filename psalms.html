@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Псалмы</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Поиск псалмов</h2>
+    <div class="search-group">
+      <label>Введите номер, название или строчку:</label>
+      <input type="text" id="psalmSearchInput" placeholder="Номер / название / текст" />
+      <button onclick="searchPsalms()">🔍 Поиск</button>
+    </div>
+    <div id="psalmResults"></div>
+    <button onclick="goHome()" class="back-btn">⬅ Главное меню</button>
+  </div>
+
+  <!-- Модальное окно -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span onclick="closeModal()">&times;</span>
+      <div id="modalText"></div>
+      <button onclick="increaseFontSize()">A+</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    window.onload = loadPsalms;
+  </script>
+</body>
+</html>
