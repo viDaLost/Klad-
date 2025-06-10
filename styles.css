@@ -1,103 +1,69 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
-  font-family: Georgia, Roboto, Inter, sans-serif;
-  background-color: #fff5e1;
+  background-color: #f5f0e6;
+  font-family: Arial, sans-serif;
   color: #333;
 }
 
-#app {
-  padding: 16px;
-}
-
-.screen {
-  display: block;
-}
-
-.hidden {
-  display: none;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
+.container {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
 }
 
 button {
-  background-color: #a8d0e6;
-  border: 1px solid #8abdbf;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-weight: bold;
-  color: #333;
+  background-color: #add8e6;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-button:hover {
-  background-color: #9bc1cf;
 }
 
 input[type="text"] {
-  width: 100%;
+  width: calc(100% - 100px);
   padding: 10px;
-  margin-bottom: 12px;
+  margin-right: 10px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
 }
 
-#books-list, #psalms-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.search-group {
+  margin-bottom: 20px;
 }
 
-.book-item, .psalm-item {
-  background-color: #f0f8ff;
-  padding: 12px;
+.result-item {
+  background: white;
+  padding: 10px;
+  margin-bottom: 10px;
   border-radius: 10px;
-  border: 1px solid #cfe3f0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
-.book-item:hover, .psalm-item:hover {
-  background-color: #e0f0ff;
-}
-
-.reader-controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
   align-items: center;
-  margin-bottom: 12px;
 }
 
-.reader-controls button {
-  min-width: 40px;
-  text-align: center;
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  position: relative;
+  max-width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
-.font-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-#font-size-label {
-  min-width: 24px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.book-text {
-  line-height: 1.6;
-  font-size: 16px;
+.modal span {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 24px;
+  cursor: pointer;
 }
