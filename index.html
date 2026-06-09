@@ -1,15 +1,243 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Библиотека</title>
-  <meta name="description" content="Библиотека с книгами и псалмами">
-  <meta name="theme-color" content="#ffffff">
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/icon-192x192.png">
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f8efe8" />
+  <meta name="description" content="Премиальное свадебное приглашение Артура и Алисы: дата, место, программа, дресс-код и анкета гостя." />
+  <title>Артур & Алиса — свадебное приглашение</title>
+  <link rel="icon" href="assets/monogram.svg" type="image/svg+xml" />
+  <link rel="preload" href="style.css" as="style" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="root"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="ambient ambient--one" aria-hidden="true"></div>
+  <div class="ambient ambient--two" aria-hidden="true"></div>
+
+  <button class="sound-toggle" type="button" data-sound-toggle aria-label="Включить или выключить музыку">
+    <span class="sound-toggle__icon" aria-hidden="true">♪</span>
+    <span data-sound-label>Музыка</span>
+  </button>
+
+  <main class="site-shell">
+    <section class="hero section" id="home">
+      <div class="hero__ornament" aria-hidden="true">
+        <svg viewBox="0 0 420 560" role="img">
+          <defs>
+            <linearGradient id="heroGold" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="#d2a66d" />
+              <stop offset="46%" stop-color="#f5dfb9" />
+              <stop offset="100%" stop-color="#986b45" />
+            </linearGradient>
+            <radialGradient id="heroBlush" cx="50%" cy="50%" r="70%">
+              <stop offset="0%" stop-color="#fff7ef" stop-opacity=".95" />
+              <stop offset="100%" stop-color="#d8a6a0" stop-opacity=".1" />
+            </radialGradient>
+          </defs>
+          <path d="M42 514 C58 255 108 64 210 48 C312 64 362 255 378 514" fill="none" stroke="url(#heroGold)" stroke-width="2" opacity=".7"/>
+          <path d="M84 516 C98 293 135 104 210 94 C285 104 322 293 336 516" fill="url(#heroBlush)" stroke="#ead0b8" stroke-width="1.2" opacity=".86"/>
+          <g fill="none" stroke="#b98b65" stroke-linecap="round" stroke-width="1.3" opacity=".62">
+            <path d="M94 236 C57 205 54 163 78 128"/>
+            <path d="M326 236 C363 205 366 163 342 128"/>
+            <path d="M99 180 C122 174 145 154 153 124"/>
+            <path d="M321 180 C298 174 275 154 267 124"/>
+          </g>
+          <g class="svg-petals" fill="#ddb2ab" opacity=".82">
+            <path d="M92 126c14-10 30-8 41 5-15 12-29 13-41-5Z"/>
+            <path d="M288 126c14-10 30-8 41 5-15 12-29 13-41-5Z"/>
+            <path d="M71 183c10-12 25-15 38-7-10 15-23 20-38 7Z"/>
+            <path d="M311 183c10-12 25-15 38-7-10 15-23 20-38 7Z"/>
+            <path d="M132 94c9-14 25-19 40-10-8 17-22 24-40 10Z"/>
+            <path d="M248 94c9-14 25-19 40-10-8 17-22 24-40 10Z"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="petal-field" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="hero__content reveal">
+        <p class="eyebrow">Свадебное приглашение</p>
+        <img class="hero__monogram" src="assets/monogram.svg" alt="Монограмма А и А" />
+        <h1><span data-bridegroom-a>Артур</span><em>&</em><span data-bridegroom-b>Алиса</span></h1>
+        <p class="hero__date">26 мая 2026</p>
+        <p class="hero__lead">Мы будем счастливы разделить с вами день, в котором начинается наша семейная история.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#rsvp">Ответить на приглашение</a>
+          <a class="btn btn--ghost" href="#details">Главные детали</a>
+        </div>
+      </div>
+
+      <div class="countdown reveal" data-countdown aria-live="polite">
+        <div><strong data-days>00</strong><span>дней</span></div>
+        <div><strong data-hours>00</strong><span>часов</span></div>
+        <div><strong data-minutes>00</strong><span>минут</span></div>
+        <div><strong data-seconds>00</strong><span>секунд</span></div>
+      </div>
+    </section>
+
+    <nav class="mobile-nav" aria-label="Навигация по приглашению">
+      <a href="#home">Начало</a>
+      <a href="#details">Детали</a>
+      <a href="#program">День</a>
+      <a href="#rsvp">Анкета</a>
+    </nav>
+
+    <section class="section intro reveal" id="details">
+      <div class="section-kicker">Главное</div>
+      <h2>Самые важные моменты — сразу перед глазами</h2>
+      <div class="detail-grid">
+        <article class="detail-card detail-card--featured">
+          <img src="assets/calendar-heart.svg" alt="" aria-hidden="true" />
+          <span>Дата</span>
+          <strong>26 мая 2026</strong>
+          <p>Отметьте этот день в календаре — мы ждём вас на нашем празднике.</p>
+        </article>
+        <article class="detail-card">
+          <img src="assets/rings.svg" alt="" aria-hidden="true" />
+          <span>Место</span>
+          <strong>Вилла Ротонда Довиль</strong>
+          <p>Торжество пройдёт в камерной, элегантной атмосфере.</p>
+        </article>
+        <article class="detail-card warning-card">
+          <span>Важно</span>
+          <strong>Рядом есть водоём</strong>
+          <p>Пожалуйста, будьте внимательны к детям и личной безопасности во время праздника.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section invitation reveal">
+      <div class="invitation__paper">
+        <span class="section-kicker">Приглашение</span>
+        <h2>Дорогие родные и друзья</h2>
+        <p>В этот особенный день мы хотим быть рядом с самыми близкими людьми. Ваше присутствие, улыбки и тёплые слова сделают наш праздник по‑настоящему живым.</p>
+        <p>Пусть этот вечер будет наполнен светом, музыкой, радостью и моментами, которые останутся в памяти надолго.</p>
+      </div>
+    </section>
+
+    <section class="section calendar-section reveal" id="calendar">
+      <div class="section-kicker">Календарь</div>
+      <h2>Май 2026</h2>
+      <div class="calendar" aria-label="Календарь на май 2026">
+        <div class="calendar__head"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+        <div class="calendar__days" data-calendar-days></div>
+      </div>
+    </section>
+
+    <section class="section program reveal" id="program">
+      <div class="section-kicker">Программа дня</div>
+      <h2>День, в котором всё продумано</h2>
+      <div class="timeline" data-timeline>
+        <article>
+          <time>15:30</time>
+          <div><h3>Сбор гостей</h3><p>Лёгкое приветствие, первые фотографии и настроение вечера.</p></div>
+        </article>
+        <article>
+          <time>16:00</time>
+          <div><h3>Церемония</h3><p>Главный момент дня — наши обещания друг другу.</p></div>
+        </article>
+        <article>
+          <time>17:00</time>
+          <div><h3>Фотосессия и welcome</h3><p>Кадры с близкими и небольшая пауза перед праздничным ужином.</p></div>
+        </article>
+        <article>
+          <time>18:00</time>
+          <div><h3>Банкет</h3><p>Тосты, музыка, ужин и тёплая атмосфера за общим столом.</p></div>
+        </article>
+        <article>
+          <time>22:30</time>
+          <div><h3>Финал вечера</h3><p>Красивое завершение праздника и последние памятные моменты.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section dress reveal" id="dress-code">
+      <div class="section-kicker">Дресс-код</div>
+      <h2>Нежная палитра праздника</h2>
+      <p class="section-copy">Будем благодарны, если в образах появятся мягкие природные оттенки: молочный, пудровый, оливковый, шампань и приглушённый розовый.</p>
+      <div class="palette" aria-label="Палитра дресс-кода">
+        <span style="--tone:#f8efe8"><b>Молочный</b></span>
+        <span style="--tone:#e6c6c4"><b>Пудра</b></span>
+        <span style="--tone:#c4b99d"><b>Олива</b></span>
+        <span style="--tone:#d8b279"><b>Шампань</b></span>
+        <span style="--tone:#b8897d"><b>Роза</b></span>
+      </div>
+    </section>
+
+    <section class="section venue reveal" id="venue">
+      <div class="venue__visual" aria-hidden="true">
+        <img src="assets/villa.svg" alt="" />
+      </div>
+      <div>
+        <span class="section-kicker">Локация</span>
+        <h2>Вилла Ротонда Довиль</h2>
+        <p class="section-copy">Сохраните адрес заранее и приезжайте немного раньше, чтобы спокойно пройти welcome‑зону и сделать первые фотографии.</p>
+        <div class="venue__buttons">
+          <a class="btn btn--primary" href="https://yandex.ru/maps/?text=%D0%92%D0%B8%D0%BB%D0%BB%D0%B0%20%D0%A0%D0%BE%D1%82%D0%BE%D0%BD%D0%B4%D0%B0%20%D0%94%D0%BE%D0%B2%D0%B8%D0%BB%D1%8C" target="_blank" rel="noopener">Открыть карту</a>
+          <a class="btn btn--ghost" href="#rsvp">Сообщить ответ</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section second-day reveal">
+      <div class="section-kicker">Второй день</div>
+      <h2>Продолжение в более свободном формате</h2>
+      <p class="section-copy">На следующий день мы планируем более спокойную встречу для общения, воспоминаний и лёгкой неформальной атмосферы.</p>
+      <div class="soft-note">
+        <strong>Просьба для гостей</strong>
+        <span>В анкете ниже отметьте, сможете ли вы быть на втором дне — это поможет нам точнее всё организовать.</span>
+      </div>
+    </section>
+
+    <section class="section rsvp reveal" id="rsvp">
+      <div class="rsvp__header">
+        <span class="section-kicker">Анкета гостя</span>
+        <h2>Пожалуйста, подтвердите присутствие</h2>
+        <p>Форма работает без сервера: ответ сохраняется на устройстве, а готовое сообщение можно скопировать и отправить организаторам.</p>
+      </div>
+      <form class="rsvp-form" data-rsvp-form>
+        <label>
+          <span>Ваше имя</span>
+          <input name="name" type="text" autocomplete="name" placeholder="Например, Анна Иванова" required />
+        </label>
+        <label>
+          <span>Вы сможете прийти?</span>
+          <select name="attendance" required>
+            <option value="Буду">Да, буду</option>
+            <option value="Будем вдвоём">Да, будем вдвоём</option>
+            <option value="Не смогу">К сожалению, не смогу</option>
+          </select>
+        </label>
+        <label>
+          <span>Второй день</span>
+          <select name="secondDay">
+            <option value="Да">Да, планирую быть</option>
+            <option value="Пока не знаю">Пока не знаю</option>
+            <option value="Нет">Нет</option>
+          </select>
+        </label>
+        <label>
+          <span>Комментарий / питание / дети</span>
+          <textarea name="comment" rows="4" placeholder="Напишите важные детали"></textarea>
+        </label>
+        <button class="btn btn--primary" type="submit">Сохранить ответ</button>
+      </form>
+      <div class="rsvp-result" data-rsvp-result hidden></div>
+    </section>
+
+    <footer class="footer reveal">
+      <img src="assets/monogram.svg" alt="" aria-hidden="true" />
+      <p>С любовью, Артур & Алиса</p>
+      <span>26.05.2026</span>
+    </footer>
+  </main>
+
+  <audio data-audio loop preload="none">
+    <source src="" type="audio/mpeg" />
+  </audio>
+  <script src="app.js" defer></script>
 </body>
 </html>
